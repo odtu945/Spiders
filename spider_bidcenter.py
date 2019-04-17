@@ -27,7 +27,7 @@ tbody_datas = etree_data.xpath("//tbody//tr")
 #tbody_datas = etree_data.xpath("//*/tr[*]")
 
 #print(type(tbody_datas))
-#bid_datas = tbody_datas[0:-1]
+bid_datas = tbody_datas[0:-1]
 #print(type(bid_datas))
 #print("-------------------------------------------------------------------------------------------")
 #print(len(bid_datas))
@@ -51,7 +51,7 @@ tbody_datas = etree_data.xpath("//tbody//tr")
     #print(bid_data.xpath("string(//tr/td[@class='zb_title']/a)").strip())
     #break
 
-for idx,bid_data in enumerate(tbody_datas):
+for idx,bid_data in enumerate(bid_datas):
     print(idx,"----------------------------------------")
     print(etree.tostring(bid_data,method='html',pretty_print=True,encoding='unicode'))
     print(idx,"++----------------------------------------")
@@ -62,7 +62,15 @@ for idx,bid_data in enumerate(tbody_datas):
     #bid_title_data = bid_data.xpath("//tr/td[@class='zb_title']/a")[idx]
     #print(etree.tostring(bid_title_data,method='html',pretty_print=True,encoding='unicode'))
     #print(bid_title_data.xpath("string(.)").strip())
-    print(bid_data.xpath("//tr/td[@class='zb_title']/a")[idx].xpath("string(.)").strip())
-    
+    #print(bid_data.xpath("//tr/td[@class='zb_title']/a")[idx].xpath("string(.)").strip())
+    bid_title = bid_data.xpath("//tr/td[@class='zb_title']/a")[idx].xpath("string(.)").strip()
+    bid_prov = bid_data.xpath("//tr/td[@class='list_area']/a/text()")[idx].strip()
+    bid_create_date = bid_data.xpath("//tr/td[@class='list_time']/text()")[idx].strip()
+    bid_url = "https:"+bid_data.xpath("//tr/td[@class='zb_title']/a/@href")[idx].strip()
+    print(bid_title)
+    print(bid_prov)
+    print(bid_create_date)
+    print(bid_url)
     # if idx == 1:
     #     break
+    print(">>>>>>>>>>>>>>>>>>>>>>")
