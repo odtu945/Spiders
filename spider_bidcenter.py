@@ -21,15 +21,48 @@ req = requests.get(url,headers=headers)
 #解析单网页
 etree_data = etree.HTML(req.content)
 
-#标题
+#获取数据主体
 tbody_datas = etree_data.xpath("//tbody//tr")
-bid_datas = tbody_datas[0:-1]
-print(len(bid_datas))
-for bid_data in bid_datas:
-    print("-------------------------------------------------------------------------------------------")
-    print(etree.tostring(bid_data,pretty_print=True))
-    print("+++++++++++")
-    print(bid_data.xpath("//td[@class='zb_title']/a/text()"))
-    print(bid_data.xpath("//tr/td[@class='list_area']/a/text()"))
-    print(bid_data.xpath("//td[@class='list_time']/text()"))
-    break
+# //*/tr[*]
+#tbody_datas = etree_data.xpath("//*/tr[*]")
+
+#print(type(tbody_datas))
+#bid_datas = tbody_datas[0:-1]
+#print(type(bid_datas))
+#print("-------------------------------------------------------------------------------------------")
+#print(len(bid_datas))
+#print(etree.tostring(tbody_datas[1],pretty_print=True))
+#print("-------------------------------------------------------------------------------------------")
+#print("".join(tbody_datas[0].xpath("string(//tr/td[@class='zb_title']/a)")))
+#bid1 = tbody_datas[1]
+#print(bid1.xpath("string(//tr/td[@class='zb_title']/a)"))
+#print("".join(tbody_datas[0].xpath("//tr/td[@class='zb_title']/a/text()")))
+
+#for bid_data in bid_datas:
+    #print("-------------------------------------------------------------------------------------------")
+    #print(etree.tostring(bid_data,pretty_print=True))
+    #print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    #print("".join(bid_data.xpath("//td[@class='zb_title']/a/text()")))
+    #print("".join(bid_data.xpath("//tr/td[@class='list_area']/a/text()")))
+    #print("".join(bid_data.xpath("//td[@class='list_time']/text()")))
+    #bid = {}
+    #bid['title'] = bid_data.xpath("string(//tr/td[@class='zb_title']/a)").strip()
+    #print(bid['title'] )
+    #print(bid_data.xpath("string(//tr/td[@class='zb_title']/a)").strip())
+    #break
+
+for idx,bid_data in enumerate(tbody_datas):
+    print(idx,"----------------------------------------")
+    print(etree.tostring(bid_data,method='html',pretty_print=True,encoding='unicode'))
+    print(idx,"++----------------------------------------")
+    #bid_title = etree.XPath("")
+    #print(bid_data.xpath("//tr/td[@class='zb_title']")[idx].xpath("string(//td/a)").strip())
+    #print(bid_data.xpath("string(//td[@class='zb_title']/a)").strip())
+    #print(bid_data.xpath("string(td[@class='zb_title']/a/text())").strip())
+    #bid_title_data = bid_data.xpath("//tr/td[@class='zb_title']/a")[idx]
+    #print(etree.tostring(bid_title_data,method='html',pretty_print=True,encoding='unicode'))
+    #print(bid_title_data.xpath("string(.)").strip())
+    print(bid_data.xpath("//tr/td[@class='zb_title']/a")[idx].xpath("string(.)").strip())
+    
+    # if idx == 1:
+    #     break
