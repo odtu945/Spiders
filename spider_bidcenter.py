@@ -4,6 +4,8 @@
 import requests
 import random
 from lxml import etree
+import sqlite3
+
 
 #Get random user anget aginst being blocked by the site
 headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
@@ -74,3 +76,5 @@ for idx,bid_data in enumerate(bid_datas):
     # if idx == 1:
     #     break
     print(">>>>>>>>>>>>>>>>>>>>>>")
+
+
