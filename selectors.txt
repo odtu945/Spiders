@@ -1,0 +1,4 @@
+bidcenter:
+标题： //tbody//tr/td[@class='zb_title']/a/text()
+省份： //tbody//tr/td[@class='list_area']/a/text()
+时间： //tbody//tr/td[@class='list_time']/text()
