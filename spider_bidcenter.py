@@ -4,12 +4,13 @@
 # Project     : crawl data of bidcenter.com.cn 
 
 import sys
-print("The python version is : ",sys.version)
 import requests
 import random
 from lxml import etree
 import sqlite3
+import hashlib
 
+print("The python version is : ",sys.version)
 
 #Get random user anget aginst being blocked by the site
 headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
@@ -56,10 +57,17 @@ bid_datas = tbody_datas[0:-1]
     #print(bid['title'] )
     #print(bid_data.xpath("string(//tr/td[@class='zb_title']/a)").strip())
     #break
+conn = sqlite3.connect('bid_datas.db')
+cur = conn.cursor()
+insert_sql_str = '''
+                INSERT INTO bid_info (bid_md5_url , bid_title , bid_prov , bid_create_date , bid_url , baidu_urls , bid_content ,
+                                    src_url , bid_data_status , crawl_time , baidu_time , email_time)
+                VALUES (?,?);
 
+                '''
 for idx,bid_data in enumerate(bid_datas):
     print(idx,"----------------------------------------")
-    print(etree.tostring(bid_data,method='html',pretty_print=True,encoding='unicode'))
+    print(etree.tostring(bid_data,method='html',pretty_print=True,encoding='Unicode'))
     print(idx,"++----------------------------------------")
     #bid_title = etree.XPath("")
     #print(bid_data.xpath("//tr/td[@class='zb_title']")[idx].xpath("string(//td/a)").strip())
@@ -73,13 +81,14 @@ for idx,bid_data in enumerate(bid_datas):
     bid_prov = bid_data.xpath("//tr/td[@class='list_area']/a/text()")[idx].strip()
     bid_create_date = bid_data.xpath("//tr/td[@class='list_time']/text()")[idx].strip()
     bid_url = "https:"+bid_data.xpath("//tr/td[@class='zb_title']/a/@href")[idx].strip()
+    bid_md5_url = hashlib.md5(bid_url.encode('utf-8')).hexdigest()
+    bid_data_status = 'ready2baidu' # ready2baidu ; ready2email ; done
     print(bid_title)
     print(bid_prov)
     print(bid_create_date)
     print(bid_url)
+    print(bid_md5_url)
     # if idx == 1:
     #     break
+
     print(">>>>>>>>>>>>>>>>>>>>>>")
-
-
->>>>>>> 82ad0933f5ba2626af942ef6691073d2a3c0b291
