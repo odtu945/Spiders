@@ -27,7 +27,10 @@ req = requests.get(url,headers=headers)
 etree_data = etree.HTML(req.content)
 baidu_urls = etree_data.xpath("//h3/a/@href")
 
-for baidu_url in baidu_urls:
-    #print(baidu_url)
-    req = requests.get(baidu_url,headers=headers,allow_redirects=False) 
-    print(req.headers['Location'])
+# for baidu_url in baidu_urls:
+#     #print(baidu_url)
+#     req = requests.get(baidu_url,headers=headers,allow_redirects=False) 
+#     print(req.headers['Location'])
+
+#print([requests.get(baidu_url,headers=headers,allow_redirects=False).headers['Location'] for baidu_url in baidu_urls])
+print([requests.get(baidu_url,headers=headers,allow_redirects=False).headers['Location'] for baidu_url in baidu_urls])
