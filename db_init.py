@@ -10,7 +10,7 @@ cur = conn.cursor()
 #create table
 cur.execute('''
             CREATE TABLE bid_info(
-            bid_md5_url TEXT PRIMARY KEY ON CONFLICT REPLACE -- 'url md5'
+            bid_md5_url TEXT PRIMARY KEY   -- 'url md5'
             ,bid_title TEXT -- '标题'
             ,bid_prov TEXT -- '省份'
             ,bid_create_date TEXT -- '招标网创建日期'
