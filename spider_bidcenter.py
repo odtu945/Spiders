@@ -9,7 +9,8 @@ import random
 from lxml import etree
 import sqlite3
 import hashlib
-
+import getbaiduurls
+import datetime
 print("The python version is : ",sys.version)
 
 #Get random user anget aginst being blocked by the site
@@ -19,8 +20,8 @@ headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/
              'Cookie': 'bidguid=09d0ae31-90e9-4d91-bae3-6a0a4cd44bdc; _uab_collina=155287009327192506718305; _umdata=G5D18F32E82CECF330D494AB726F58604B97D70; BIDCTER_USERNAME=UserName=13810757300; bidguidnew=5ed59a72-79db-4ecb-ae6a-faa09ae4c0b9; bidcurrKwdDiqu=kwd=èªç©º&diqu=35; Hm_lvt_9954aa2d605277c3e24cb76809e2f856=1552889439,1553218279,1553218350,1553758161; keywords==%e5%9b%bd%e7%94%b5; Hm_lpvt_9954aa2d605277c3e24cb76809e2f856=1554970538',
              'Referer': 'https://search.bidcenter.com.cn/',
              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-
-url = "https://search.bidcenter.com.cn/search?keywords=%E6%B8%AF%E5%8A%A1%20%E5%8F%AF%E8%A7%86%E5%8C%96&type=1"
+url = "https://search.bidcenter.com.cn/search?keywords=港务 可视化&type=1"
+#url = "https://search.bidcenter.com.cn/search?keywords=%E6%B8%AF%E5%8A%A1%20%E5%8F%AF%E8%A7%86%E5%8C%96&type=1"
 
 req = requests.get(url,headers=headers)
 #print(req.text)
@@ -62,9 +63,21 @@ cur = conn.cursor()
 insert_sql_str = '''
                 INSERT INTO bid_info (bid_md5_url , bid_title , bid_prov , bid_create_date , bid_url , baidu_urls , bid_content ,
                                     src_url , bid_data_status , crawl_time , baidu_time , email_time)
-                VALUES (?,?);
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?);
 
                 '''
+bid_md5_url=""
+bid_title=""
+bid_prov=""
+bid_create_date=""
+bid_url=""
+baidu_urls=""
+bid_content=""
+src_url="https://www.bidcenter.com.cn/"
+bid_data_status=""
+crawl_time=""
+baidu_time=""
+
 for idx,bid_data in enumerate(bid_datas):
     print(idx,"----------------------------------------")
     print(etree.tostring(bid_data,method='html',pretty_print=True,encoding='Unicode'))
@@ -82,13 +95,23 @@ for idx,bid_data in enumerate(bid_datas):
     bid_create_date = bid_data.xpath("//tr/td[@class='list_time']/text()")[idx].strip()
     bid_url = "https:"+bid_data.xpath("//tr/td[@class='zb_title']/a/@href")[idx].strip()
     bid_md5_url = hashlib.md5(bid_url.encode('utf-8')).hexdigest()
-    bid_data_status = 'ready2baidu' # ready2baidu ; ready2email ; done
-    print(bid_title)
-    print(bid_prov)
-    print(bid_create_date)
-    print(bid_url)
-    print(bid_md5_url)
+    bid_data_status = 'ready2email' # ready2baidu ; ready2email ; done
+    baidu_urls = getbaiduurls.get_baidu_urls_by_keyword(bid_title)
+    # print(bid_title)
+    # print(bid_prov)
+    # print(bid_create_date)
+    # print(bid_url)
+    # print(bid_md5_url)
     # if idx == 1:
     #     break
+    bid_data_list = [bid_md5_url , bid_title , bid_prov , bid_create_date , bid_url , ','.join(baidu_urls) , "" , src_url , bid_data_status , datetime.datetime.now(), datetime.datetime.now() , ""]
+    print(bid_data_list)
 
+    try:
+        cur.execute(insert_sql_str,bid_data_list)
+    except sqlite3.IntegrityError:
+        print("sqlite3.IntegrityError: column bid_md5_url is not unique")
+        print("已经存在的招标实体： ",bid_md5_url,bid_title)
+    conn.commit()
     print(">>>>>>>>>>>>>>>>>>>>>>")
+conn.close()
