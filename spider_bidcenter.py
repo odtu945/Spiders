@@ -108,27 +108,29 @@ def bidcenter_by_url(url):
         # if idx == 1:
         #     break
         except_keywords=["维修","监控","代理","运维"]
+        #last two week dates
+        last_two_week_dates = [(datetime.date.today()-datetime.timedelta(days=x)).isoformat() for x in range(0,7)]        
 
-        
-
-        if (not any(x in bid_title for x in except_keywords )) and  :
+        if (not any(x in bid_title for x in except_keywords )) and  bid_create_date in last_two_week_dates:
             
-        bid_data_list = [bid_md5_url , bid_title , bid_prov , bid_create_date , bid_url , ','.join(baidu_urls) , "" , src_url , bid_data_status , datetime.datetime.now(), datetime.datetime.now() , ""]
-        print(bid_data_list)
+            bid_data_list = [bid_md5_url , bid_title , bid_prov , bid_create_date , bid_url , ','.join(baidu_urls) , "" , src_url , bid_data_status , datetime.datetime.now(), datetime.datetime.now() , ""]
+            print(bid_data_list)
 
-        try:
-            cur.execute(insert_sql_str,bid_data_list)
-        except sqlite3.IntegrityError:
-            print("sqlite3.IntegrityError: column bid_md5_url is not unique")
-            print("已经存在的招标实体： ",bid_md5_url,bid_title)
-        conn.commit()
-        print(">>>>>>>>>>>>>>>>>>>>>>")
+            try:
+                cur.execute(insert_sql_str,bid_data_list)
+            except sqlite3.IntegrityError:
+                print("sqlite3.IntegrityError: column bid_md5_url is not unique")
+                print("已经存在的招标实体： ",bid_md5_url,bid_title)
+            conn.commit()
+            print(">>>>>>>>>>>>>>>>>>>>>>")
     conn.close()
 
 if __name__ == '__main__':
     
     #搜索关键词--供应链王帆提供
-    search_keywords=["供应链","系统","技术服务","TMS","OMS","船运服务","物流","平台","运输","化工园区","智慧园区","智慧物流","电子运单","船舶运输","港务 可视化","危化品 IT","危化品 物流","危险货物道路运输安全","危 道路运输安全","危化品装卸运输监管平台","危 运输监管平台","油 租船"]
+    #search_keywords=["供应链","系统","技术服务","TMS","OMS","船运服务","物流","平台","运输","化工园区","智慧园区","智慧物流","电子运单","船舶运输","港务 可视化","危化品 IT","危化品 物流","危险货物道路运输安全","危 道路运输安全","危化品装卸运输监管平台","危 运输监管平台","油 租船"]
+    search_keywords=["TMS","电子运单","船舶运输","港务 可视化","危化品 IT","危化品 物流","危险货物道路运输安全","危 道路运输安全","危化品装卸运输监管平台","危 运输监管平台","油 租船"]
+    
     url = "https://search.bidcenter.com.cn/search?keywords={0}&type=1"
     urls = [url.format(x) for x in search_keywords]
     for url in urls:
