@@ -12,8 +12,9 @@ def get_baidu_urls_by_keyword(vkeyword):
     vkeyword=vkeyword
     
     #wd 为查询关键字，lm代表搜索结果时间限制)以天为单位，例如搜索最近一个月的网页，lm=30.默认值为0,表示没有时间限制。 
-    url = 'https://www.baidu.com/s?ie=utf-8&wd=' + urllib.parse.quote(vkeyword)# + '&lm=3' 
+    url = 'https://www.baidu.com/s?ie=utf-8&wd=' + urllib.parse.quote(vkeyword) + '&lm=16' 
 
+    print(url,"------------------------------------")
     headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
              'Accept-Encoding': 'gzip, deflate, br',
              'Accept-Language': 'zh-CN,zh;q=0.9',
@@ -26,7 +27,7 @@ def get_baidu_urls_by_keyword(vkeyword):
     req = requests.get(url,headers=headers)
     #print(req.text)
     etree_data = etree.HTML(req.content)
-    baidu_urls = etree_data.xpath("//h3/a/@href")
+    baidu_urls = etree_data.xpath('//div[@class="result c-container "]//h3/a/@href')
     return [requests.get(baidu_url,headers=headers,allow_redirects=False).headers['Location'] for baidu_url in baidu_urls]
 
 if __name__ == '__main__':
